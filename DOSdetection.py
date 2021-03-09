@@ -30,15 +30,15 @@ while True:
     end = time.time()
 
     #if 1 second has passed
-    if end-start>1:
+    if (end-start)>10:
         for i in IPdict:
             #if there has been more than 100 requests in the previous second
             if IPdict[i] > 100:
                 print("Potential DOS attack from source IP:", sourceIP)
-                print("{} packets received in the past second".format(IPdict[i]))
+                print("{} packets received in the past 10 seconds".format(IPdict[i]))
                 print("\n")
-                #set back to 0 after alerting user
-                IPdict[i] = 0
+            #set back to 0
+            IPdict[i] = 0
 
         #resetting start time
         start = time.time()
