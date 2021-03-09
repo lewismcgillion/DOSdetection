@@ -1,24 +1,24 @@
 # DOSdetection
 A simple python script aimed to detect DOS attacks by monitoring incoming traffic and flagging any IPs which make an unusual number of requests.
 
-##Installation
+## Installation
 Install the DOS detection by cloning the repository
 
-'''bash
+''' bash
 git clone https://github.com/lewismcgillion/DOSdetection
 '''
 
 Change directory to repository
-'''bash
+''' bash
 cd DOSdetection
 '''
 
 Install required dependencies 
-'''bash
+''' bash
 pip install -r requirements.txt
 '''
 
 Run script as superuser
-'''bash
+''' bash
 sudo python DOSdetection.py
 '''
