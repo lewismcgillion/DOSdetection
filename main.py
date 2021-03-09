@@ -1,16 +1,42 @@
-# This is a sample Python script.
+import socket
+import struct
+import time
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+#creating socket
+s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, socket.ntohs(3))
 
+IPdict = {}
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+print("Monitoring for threats")
 
+#time variable to measure elapsed time between requests
+start = time.time()
+while True:
+    #receiving UDP packet
+    packet = s.recvfrom(2048)
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+    #getting source IP address
+    ipheader = packet[0][14:34]
+    ip_header = struct.unpack("!12s4s4s", ipheader)
+    sourceIP = socket.inet_ntoa(ip_header[1])
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    #updating dictionary with number of requests from source IP
+    if sourceIP in IPdict:
+        IPdict[sourceIP] +=1
+
+        #current time
+        end = time.time()
+
+        #if the IP has made more than 50 requests in the past second
+        if IPdict[sourceIP] > 100 and end-start<2:
+            print("Potential DOS attack from source IP:", sourceIP)
+            #remove from dictinary after alerting user
+            IPdict.pop(sourceIP)
+            #wait for user input before continuing
+            input("Press Enter to continue")
+    else:
+        IPdict[sourceIP] = 1
+
+    #resetting start time
+    start = time.time()
+
