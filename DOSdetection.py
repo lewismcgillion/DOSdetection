@@ -23,20 +23,23 @@ while True:
     #updating dictionary with number of requests from source IP
     if sourceIP in IPdict:
         IPdict[sourceIP] +=1
-
-        #current time
-        end = time.time()
-
-        #if the IP has made more than 50 requests in the past second
-        if IPdict[sourceIP] > 100 and end-start<2:
-            print("Potential DOS attack from source IP:", sourceIP)
-            #remove from dictinary after alerting user
-            IPdict.pop(sourceIP)
-            #wait for user input before continuing
-            input("Press Enter to continue")
     else:
         IPdict[sourceIP] = 1
 
-    #resetting start time
-    start = time.time()
+    # current time
+    end = time.time()
+
+    #if 1 second has passed
+    if end-start>1:
+        for i in IPdict:
+            #if there has been more than 100 requests in the previous second
+            if IPdict[i] > 100:
+                print("Potential DOS attack from source IP:", sourceIP)
+                print("{} packets received in the past second".format(IPdict[i]))
+                print("\n")
+                #set back to 0 after alerting user
+                IPdict[i] = 0
+
+        #resetting start time
+        start = time.time()
 
